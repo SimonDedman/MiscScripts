@@ -1,0 +1,10 @@
+1. Fork project on github (top right).
+2. In yout GitHub forked project, click green "code" button, copy git address.
+3. In a folder on your filesystem: "git clone [gitaddress]".
+4. Go to new subfolder, open Rproj in RStudio.
+5. Make changes in your local files in RStudio, test, devtools::document(), 'git commit push' to your own Github fork.
+6. Go to original (other person's) package, pull requests, create, "compare across forks", select your fork as the right hand side. "Create pull request" button.
+7. If it's not automatically named correctly, name it well. See https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue.
+8. Example: https://github.com/r-lib/usethis/pull/1898
+
+https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request?tool=desktop
