@@ -110,11 +110,11 @@ sf::st_drop_geometry(df) # remove geometry column
 
 #Pipes####
 # |> # R 4.1.0 native pipe, ctrl+shift+m shortcut. Doesn't need magrittr/dplyr (which uses magrittr)
-  df %<>% mutate(mycolname = as.integer(mycolname)) #change col class in pipe
+df %<>% mutate(mycolname = as.integer(mycolname)) #change col class in pipe
 a <- b <- 1 # never EVER do this. Both a & b will be created in the same memory space and will BE the same forever so whatever you do to one happens to the other
 # %$% #magrittr, Expose the names in lhs to the rhs expression. This is useful when functions do not have a built-in data argument.
 
-  summarise(WhichForageHours = list(hour(HourFloor))) # allows vector output to df, bypassing single value result rule
+summarise(WhichForageHours = list(hour(HourFloor))) # allows vector output to df, bypassing single value result rule
 
 hist(MonthlyDSTs %>%
        filter(Month == 2) %>%
@@ -178,8 +178,8 @@ mtcars |>
 mtcars %T>%
   {
     summarise(., sdd = sd(carb)) |>
-    print() |>
-    write_csv("/home/simon/Desktop/tmp.csv")
+      print() |>
+      write_csv("/home/simon/Desktop/tmp.csv")
   } |>
   summarise(meancarb = mean(carb))
 
@@ -476,7 +476,7 @@ apply(mydata[,c("y","ybin")], 2, function(outcome){summary(lm(outcome~x+z))})
 total <- 20
 pb <- txtProgressBar(min = 0, max = total, style = 3) # create progress bar
 # for (i in 1:total) {   setTxtProgressBar(pb, i) # update progress bar
-  #your code
+#your code
 # } close(pb)
 
 library(pbapply)
@@ -534,7 +534,7 @@ for (var in names(mtcars)) {
 
 # Symbols meaning####
 # %% # modular division: gives the remainder, not the result:
-  10 / 10 # 1
+10 / 10 # 1
 10 %% 10 # 0
 110 %% 10 # 0
 # useful in loops to print progress every nth loop e.g. if (i %% 10 == 0) { #do something}
@@ -549,18 +549,18 @@ for (var in names(mtcars)) {
 # Keyboard shortcuts ####
 CTRL + SHIFT + R # insert section heading
 # <- # Alt minus
-  # |> # ctrl shift m
-  # ctrl i : indent a line
-  # ctrl shift c : comment/uncomment a line
-  # ctrl 1 : focus cursor on source pane
-  # ctrl 2: focus cursor on console pane (and others for other panes)
-  # ctrl shift o : open document outline
-  # ctrl down/up : keyboard scroll the active pane
-  # ctrl alt down/up : select multiple lines for multicursor
-  # ctrl alt shift down/up : don't select lines while shifting, allows noncontiguous multicursor
-  # ctrl shift / : reflow long comment to the next line(s)
-  # ctrl a : select all
-  # ctrl shift a : reformat code nicely. Also addins, style active file.
+# |> # ctrl shift m
+# ctrl i : indent a line
+# ctrl shift c : comment/uncomment a line
+# ctrl 1 : focus cursor on source pane
+# ctrl 2: focus cursor on console pane (and others for other panes)
+# ctrl shift o : open document outline
+# ctrl down/up : keyboard scroll the active pane
+# ctrl alt down/up : select multiple lines for multicursor
+# ctrl alt shift down/up : don't select lines while shifting, allows noncontiguous multicursor
+# ctrl shift / : reflow long comment to the next line(s)
+# ctrl a : select all
+# ctrl shift a : reformat code nicely. Also addins, style active file.
 
 
 # AddIns ####
@@ -680,3 +680,35 @@ df %>%
 # Superscript
 labs(x = expression("Geographic Range" ~ (Million ~ Km^{2})), # https://stackoverflow.com/questions/20980761/superscript-in-r
      y = "Market Gravity")
+
+
+# For PCH21:24 point shapes with fills & (border) colours,
+# set fill/colour/shape dynamically and have legend accurately reflect this
+# See: /home/simon/Documents/Si Work/PostDoc Work/Saving The Blue/Projects/2023-11_White_Sharks/2024-02-08_GWS-Abacus-AllReceivers.png
+# From STB package, 2023-11 white shark script
+ggplot(data = allshark) +
+  # border & shape
+  geom_point(mapping = aes(x = Date,
+                           y = Station,
+                           fill = Shark, # definitely edits fill but all legend items are black (pch 21:24)
+                           colour = factor(locationTagged, levels = c("New Brunswick, Canada", # definitely edits border colour but legend icons are filled  (pch 21:24)
+                                                                      "Cape Cod, USA",
+                                                                      "South Carolina, USA")),
+                           shape = SEX),
+             size = 6,
+             stroke = 0.7, # point border width
+  ) +
+  # colours for deploy location as shape borders
+  scale_colour_manual(values = c("black", "blue", "red")) +
+  # have to be the shapes which have fill and colour (21:25 but only needed 3 here):
+  scale_shape_manual(values = c(21:23)) +
+  # Override legend default colour of all black by changing shape to one with border thus allows fill
+  # can manually set each item's shape
+  guides(
+    fill = guide_legend(override.aes = list(
+      shape = c(22,22,21,23,21,22,22,22),
+      colour = c("red","blue","blue","black","blue","red","blue","blue")
+    )),
+    # ditto colour, makes it an outline
+    colour = guide_legend(override.aes = list(shape = 23))) # https://stackoverflow.com/questions/77883100/ggplot-buggy-fill-and-colour-legends-for-shapes-pch-2125
+# plus theme save etc etc.
